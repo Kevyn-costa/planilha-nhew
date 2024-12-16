@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Gastos Da maria bibi</title>
+  <style>
+    /* Estilo Global */
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f1f5;
+      color: #4a4a4a;
+    }
+    header {
+      background-color: #b86fc4;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 5px solid #924e8d;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    header p {
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .section h2 {
+      font-size: 1.8rem;
+      color: #b86fc4;
+      margin-bottom: 15px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f8fa;
+    }
+    .btn {
+      background-color: #b86fc4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #924e8d;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    table th {
+      background-color: #b86fc4;
+      color: white;
+    }
+    table td {
+      background-color: #f9f8fa;
+    }
+    .balance {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+    .balance strong {
+      color: #b86fc4;
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <h1>Controle de Gastos da Belle</h1>
+    <p>Organizando a vida financeira da trutinha de forma simples 💜</p>
+  </header>
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <!-- Receitas -->
+    <div class="section">
+      <h2>Ganhos</h2>
+      <div class="form-group">
+        <label for="descricao-receita">Adicionar ganhos:</label>
+        <input type="text" id="descricao-receita" placeholder="Ex: pé de meia, auxilio, etc...">
+      </div>
+      <div class="form-group">
+        <label for="valor-receita">Valor (R$)</label>
+        <input type="number" id="valor-receita" placeholder="Ex: R$100,00">
+      </div>
+      <div class="form-group">
+        <label for="status-receita">Situação</label>
+        <select id="status-receita">
+          <option value="pago">Pago</option>
+          <option value="pendente">Pendente</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="data-receita">Data (opcional)</label>
+        <input type="date" id="data-receita">
+      </div>
+      <button class="btn" onclick="adicionarReceita()">Adicionar Receita</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Valor (R$)</th>
+            <th>Situação</th>
+            <th>Data</th>
+            <th>Dias Restantes</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-receitas"></tbody>
+      </table>
+    </div>
+    <!-- Despesas -->
+    <div class="section">
+      <h2>Despesas</h2>
+      <div class="form-group">
+        <label for="descricao-despesa">Nome da Despesa</label>
+        <input type="text" id="descricao-despesa" placeholder="Ex: academia, shopee, etc.">
+      </div>
+      <div class="form-group">
+        <label for="valor-despesa">Valor (R$)</label>
+        <input type="number" id="valor-despesa" placeholder="Ex R$100,00">
+      </div>
+      <div class="form-group">
+        <label for="status-despesa">Situação</label>
+        <select id="status-despesa">
+          <option value="pago">Pago</option>
+          <option value="pendente">Pendente</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="data-despesa">Data (opcional)</label>
+        <input type="date" id="data-despesa">
+      </div>
+      <button class="btn" onclick="adicionarDespesa()">Adicionar Despesa</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Valor (R$)</th>
+            <th>Situação</th>
+            <th>Data</th>
+            <th>Dias Restantes</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-despesas"></tbody>
+      </table>
+    </div>
+    <!-- Quadro de Resumo -->
+    <div class="section balance">
+      <h2>Resumo Financeiro</h2>
+      <p><strong>Saldo Atual:</strong> R$ <span id="saldo-atual">0.00</span></p>
+      <p><strong>Valores a Receber:</strong> R$ <span id="valores-receber">0.00</span></p>
+      <p><strong>Gastos Futuros:</strong> R$ <span id="gastos-futuros">0.00</span></p>
+   
+      <p>Bjs do jk trutaaa, vou fzr outro programa kkk♥️</p>
+    </div>
+  </div>
+  <!-- Script -->
+  <script>
+    // Dados
+    let receitas = JSON.parse(localStorage.getItem("receitas")) || [];
+    let despesas = JSON.parse(localStorage.getItem("despesas")) || [];
+  
+    // Salvamento no localStorage
+    function salvarDados() {
+      localStorage.setItem("receitas", JSON.stringify(receitas));
+      localStorage.setItem("despesas", JSON.stringify(despesas));
+    }
+  
+    // Função para calcular dias restantes
+    function calcularDiasRestantes(data) {
+      if (!data) return "-";
+      const hoje = new Date();
+      const dataItem = new Date(data);
+      const diff = Math.ceil((dataItem - hoje) / (1000 * 60 * 60 * 24));
+      return diff > 0 ? diff : "Vencido";
+    }
+  
+    // Atualizar saldos
+    function atualizarSaldo() {
+      const saldoAtual = receitas.reduce((acc, r) => acc + (r.situacao === "pago" ? r.valor : 0), 0) -
+        despesas.reduce((acc, d) => acc + (d.situacao === "pago" ? d.valor : 0), 0);
+  
+      const valoresReceber = receitas.reduce((acc, r) => acc + (r.situacao === "pendente" ? r.valor : 0), 0);
+      const gastosFuturos = despesas.reduce((acc, d) => acc + (d.situacao === "pendente" ? d.valor : 0), 0);
+  
+      document.getElementById("saldo-atual").textContent = saldoAtual.toFixed(2);
+      document.getElementById("valores-receber").textContent = valoresReceber.toFixed(2);
+      document.getElementById("gastos-futuros").textContent = gastosFuturos.toFixed(2);
+    }
+  
+    // Atualizar tabelas com opção de remoção
+    function atualizarTabelaReceitas() {
+      const tabela = document.getElementById("tabela-receitas");
+      tabela.innerHTML = "";
+      receitas.forEach(({ descricao, valor, situacao, data }, index) => {
+        const novaLinha = tabela.insertRow();
+        novaLinha.insertCell(0).textContent = descricao;
+        novaLinha.insertCell(1).textContent = valor.toFixed(2);
+        novaLinha.insertCell(2).textContent = situacao;
+        novaLinha.insertCell(3).textContent = data || "-";
+        novaLinha.insertCell(4).textContent = calcularDiasRestantes(data);
+        const removerBtn = document.createElement("button");
+        removerBtn.textContent = "Remover";
+        removerBtn.className = "btn";
+        removerBtn.onclick = () => removerReceita(index);
+        novaLinha.insertCell(5).appendChild(removerBtn);
+      });
+    }
+  
+    function atualizarTabelaDespesas() {
+      const tabela = document.getElementById("tabela-despesas");
+      tabela.innerHTML = "";
+      despesas.forEach(({ descricao, valor, situacao, data }, index) => {
+        const novaLinha = tabela.insertRow();
+        novaLinha.insertCell(0).textContent = descricao;
+        novaLinha.insertCell(1).textContent = valor.toFixed(2);
+        novaLinha.insertCell(2).textContent = situacao;
+        novaLinha.insertCell(3).textContent = data || "-";
+        novaLinha.insertCell(4).textContent = calcularDiasRestantes(data);
+        const removerBtn = document.createElement("button");
+        removerBtn.textContent = "Remover";
+        removerBtn.className = "btn";
+        removerBtn.onclick = () => removerDespesa(index);
+        novaLinha.insertCell(5).appendChild(removerBtn);
+      });
+    }
+  
+    // Funções para remover itens
+    function removerReceita(index) {
+      if (confirm("Deseja realmente remover esta receita?")) {
+        receitas.splice(index, 1);
+        salvarDados();
+        atualizarTabelaReceitas();
+        atualizarSaldo();
+      }
+    }
+  
+    function removerDespesa(index) {
+      if (confirm("Deseja realmente remover esta despesa?")) {
+        despesas.splice(index, 1);
+        salvarDados();
+        atualizarTabelaDespesas();
+        atualizarSaldo();
+      }
+    }
+  
+    // Adicionar receita
+    function adicionarReceita() {
+      const descricao = document.getElementById("descricao-receita").value.trim();
+      const valor = parseFloat(document.getElementById("valor-receita").value);
+      const situacao = document.getElementById("status-receita").value;
+      const data = document.getElementById("data-receita").value;
+  
+      if (!descricao || isNaN(valor) || valor <= 0) {
+        alert("Preencha todos os campos corretamente!");
+        return;
+      }
+  
+      receitas.push({ descricao, valor, situacao, data });
+      salvarDados();
+      atualizarTabelaReceitas();
+      atualizarSaldo();
+      limparCampos(["descricao-receita", "valor-receita", "data-receita"]);
+    }
+  
+    // Adicionar despesa
+    function adicionarDespesa() {
+      const descricao = document.getElementById("descricao-despesa").value.trim();
+      const valor = parseFloat(document.getElementById("valor-despesa").value);
+      const situacao = document.getElementById("status-despesa").value;
+      const data = document.getElementById("data-despesa").value;
+  
+      if (!descricao || isNaN(valor) || valor <= 0) {
+        alert("Preencha todos os campos corretamente!");
+        return;
+      }
+  
+      despesas.push({ descricao, valor, situacao, data });
+      salvarDados();
+      atualizarTabelaDespesas();
+      atualizarSaldo();
+      limparCampos(["descricao-despesa", "valor-despesa", "data-despesa"]);
+    }
+  
+    // Limpar campos
+    function limparCampos(campos) {
+      campos.forEach(id => {
+        document.getElementById(id).value = "";
+      });
+    }
+  
+    // Inicializar ao carregar a página
+    document.addEventListener("DOMContentLoaded", () => {
+      atualizarTabelaReceitas();
+      atualizarTabelaDespesas();
+      atualizarSaldo();
+    });
+  </script>
+</body>
+</html>
